@@ -1,0 +1,66 @@
+<div class="history-container">
+  <mat-card class="history-header">
+    <mat-card-header>
+      <mat-icon mat-card-avatar>history</mat-icon>
+      <mat-card-title>Historia rozmów</mat-card-title>
+      <mat-card-subtitle>Twoje poprzednie sesje czatu</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-actions>
+      <button mat-raised-button color="primary" (click)="createNewConversation()">
+        <mat-icon>add</mat-icon>
+        Nowa rozmowa
+      </button>
+    </mat-card-actions>
+  </mat-card>
+
+  <div *ngIf="isLoading" class="loading-container">
+    <mat-card>
+      <mat-card-content>
+        <div class="loading-content">
+          <mat-spinner diameter="40"></mat-spinner>
+          <p>Ładowanie historii rozmów...</p>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <div class="sessions-container" *ngIf="!isLoading">
+    <div *ngIf="conversations.length === 0" class="empty-state">
+      <mat-icon class="empty-icon">chat_bubble_outline</mat-icon>
+      <h3>Brak historii rozmów</h3>
+      <p>Rozpocznij nową rozmowę, aby zobaczyć ją tutaj.</p>
+      <button mat-raised-button color="primary" (click)="createNewConversation()">
+        <mat-icon>add</mat-icon>
+        Nowa rozmowa
+      </button>
+    </div>
+
+    <div *ngFor="let conversation of conversations" class="session-card-wrapper">
+      <mat-card class="session-card" (click)="openConversation(conversation)">
+        <mat-card-header>
+          <mat-icon mat-card-avatar class="session-icon">chat</mat-icon>
+          <mat-card-title>{{ conversation.title }}</mat-card-title>
+          <mat-card-subtitle>
+            {{ formatDate(conversation.updatedAt) }} • {{ conversation.messageCount }} wiadomości
+          </mat-card-subtitle>
+        </mat-card-header>
+        
+        <mat-card-content>
+          <p class="last-message" *ngIf="conversation.lastMessage">{{ conversation.lastMessage }}</p>
+          <p class="last-message empty" *ngIf="!conversation.lastMessage">Brak wiadomości</p>
+        </mat-card-content>
+        
+        <mat-card-actions align="end">
+          <button mat-button (click)="openConversation(conversation); $event.stopPropagation()">
+            <mat-icon>open_in_new</mat-icon>
+            Otwórz
+          </button>
+          <button mat-button color="warn" (click)="deleteConversation(conversation, $event)">
+            <mat-icon>delete</mat-icon>
+            Usuń
+          </button>
+        </mat-card-actions>
+      </mat-card>
+    </div>
+  </div>
+</div>

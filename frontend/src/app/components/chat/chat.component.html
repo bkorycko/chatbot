@@ -1,0 +1,126 @@
+<div class="chat-container">
+  <div class="messages-container" #messagesContainer>
+    <div class="messages-list">
+      <div *ngFor="let message of messages; trackBy: trackMessage" 
+           class="message-wrapper"
+           [class.user-message]="message.isUser"
+           [class.ai-message]="!message.isUser">
+        
+        <mat-card class="message-card">
+          <mat-card-content>
+            <div class="message-header">
+              <mat-icon class="message-icon">
+                {{ message.isUser ? 'person' : 'smart_toy' }}
+              </mat-icon>
+              <span class="message-author">
+                {{ message.isUser ? 'Ty' : 'AI Asystent' }}
+              </span>
+              <span class="message-time">
+                {{ message.timestamp | date:'HH:mm' }}
+              </span>
+            </div>
+            <div class="message-content">
+              {{ message.content }}
+              <span *ngIf="message.isStreaming" class="streaming-cursor">|</span>
+            </div>
+            
+            <div *ngIf="!message.isUser" class="rating-buttons">
+              <div class="rating-label">
+                <span *ngIf="message.isStreaming">Piszę odpowiedź...</span>
+                <span *ngIf="!message.isStreaming && message.rating === RatingEnum.None">Odpowiedź gotowa</span>
+              </div>
+              <div class="rating-actions">
+                <span *ngIf="!message.isStreaming && message.rating === RatingEnum.None" class="rating-label">Oceń:</span>
+                <span *ngIf="!message.isStreaming && message.rating !== RatingEnum.None">Oceniono</span>
+                <button 
+                  mat-icon-button 
+                  (click)="rateMessage(message.id, RatingEnum.Like)"
+                  [class.active-like]="message.rating === RatingEnum.Like"
+                  [disabled]="message.isStreaming"
+                  matTooltip="Podoba mi się"
+                  class="rating-button like-button">
+                  👍
+                </button>
+                <button 
+                  mat-icon-button 
+                  (click)="rateMessage(message.id, RatingEnum.Dislike)"
+                  [class.active-dislike]="message.rating === RatingEnum.Dislike"
+                  [disabled]="message.isStreaming"
+                  matTooltip="Nie podoba mi się"
+                  class="rating-button dislike-button">
+                  👎
+                </button>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+      <div *ngIf="isLoading" class="message-wrapper ai-message">
+        <mat-card class="message-card loading-card">
+          <mat-card-content>
+            <div class="message-header">
+              <mat-icon class="message-icon">smart_toy</mat-icon>
+              <span class="message-author">AI Asystent</span>
+            </div>
+            <div class="loading-content">
+              <mat-spinner diameter="20"></mat-spinner>
+              <span>Przygotowuję odpowiedź...</span>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+  </div>
+
+  <div class="input-container">
+    <mat-card class="input-card">
+      <mat-card-content>
+        <div class="input-wrapper">
+          <mat-form-field class="message-input" appearance="outline">
+            <mat-label>Wpisz swoją wiadomość...</mat-label>
+            <textarea 
+              matInput 
+              [(ngModel)]="currentMessage"
+              (keydown)="onKeyPress($event)"
+              [disabled]="isLoading"
+              rows="1"
+              placeholder="Zadaj pytanie...">
+            </textarea>
+          </mat-form-field>
+          
+          <div class="action-buttons">
+            <button 
+              mat-fab 
+              color="primary" 
+              (click)="sendMessage()"
+              [disabled]="!currentMessage.trim() || isLoading"
+              class="send-button"
+              *ngIf="!isTyping">
+              <mat-icon>send</mat-icon>
+            </button>
+            
+            <button 
+              mat-fab 
+              color="warn" 
+              (click)="cancelCurrentTyping()"
+              class="cancel-button"
+              *ngIf="isTyping"
+              matTooltip="Anuluj generowanie odpowiedzi">
+              <mat-icon>stop</mat-icon>
+            </button>
+            
+            <button 
+              mat-icon-button 
+              (click)="clearChat()"
+              [disabled]="isLoading"
+              class="clear-button"
+              matTooltip="Wyczyść czat">
+              <mat-icon>clear_all</mat-icon>
+            </button>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

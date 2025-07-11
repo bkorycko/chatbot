@@ -1,0 +1,110 @@
+.history-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 16px;
+}
+
+.history-header {
+  margin-bottom: 24px;
+  
+  mat-card-header {
+    padding: 16px;
+  }
+}
+
+.sessions-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 48px 16px;
+  color: rgba(0, 0, 0, 0.6);
+  
+  .empty-icon {
+    font-size: 64px;
+    width: 64px;
+    height: 64px;
+    margin-bottom: 16px;
+    color: rgba(0, 0, 0, 0.3);
+  }
+  
+  h3 {
+    margin: 16px 0 8px 0;
+    color: rgba(0, 0, 0, 0.7);
+  }
+  
+  p {
+    margin-bottom: 24px;
+  }
+}
+
+.session-card-wrapper {
+  animation: slideInUp 0.3s ease-out;
+}
+
+.session-card {
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  border-left: 4px solid #2196f3;
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+  
+  .session-icon {
+    background: #e3f2fd;
+    color: #2196f3;
+  }
+}
+
+.last-message {
+  color: rgba(0, 0, 0, 0.6);
+  font-style: italic;
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+mat-card-actions {
+  padding: 8px 16px 16px;
+  
+  button {
+    margin-left: 8px;
+  }
+}
+
+@media (max-width: 768px) {
+  .history-container {
+    padding: 8px;
+  }
+  
+  .session-card {
+    mat-card-header {
+      padding: 12px;
+    }
+    
+    mat-card-content {
+      padding: 0 12px 12px;
+    }
+    
+    mat-card-actions {
+      padding: 8px 12px 12px;
+    }
+  }
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
